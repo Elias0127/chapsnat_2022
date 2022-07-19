@@ -1,22 +1,36 @@
 import { Text, View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react"
-
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
+    const auth = getAuth();
+
+    async function handleSubmit() {
+        console.log("handle submit envoked!!")
+
+        await signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    }
+
     return (
         <>
             <Text style={styles.bigBlue}>Login Here</Text>
-            <View style={styles.inputView}>
+            <View style={styles.inputView1}>
                 <TextInput
                     placeholder='Email'
                     placeholderTextColor="#003f5c"
                     onChangeText={(email) => setEmail(email)}
                 />
             </View>
-            <View style={styles.inputView}>
+            <View style={styles.inputView2}>
                 <TextInput
                     placeholder='Password'
                     secureTextEntry={true}
@@ -25,10 +39,16 @@ export default function LoginScreen({ navigation }) {
                 />
             </View>
             <TouchableOpacity style={styles.loginBtn} onPress={() => {
-                {/* what do you think will go here? */ }
+                handleSubmit();
             }}>
                 <Text style={styles.loginText}>LOGIN</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.redirectBtn} onPress={() => {
+                navigation.navigate("Signup")
+            }}>
+                <Text>Don't have an account? Sign up here</Text>
+            </TouchableOpacity>
+
         </>
     )
 }
@@ -41,15 +61,32 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: 40,
         backgroundColor: "grey",
-        color: "white"
+        color: "white",
+        marginLeft: '9%'
     },
-    inputView: {
-        backgroundColor: "#FFC0CB",
-        borderRadius: 30,
-        width: "70%",
-        height: 45,
-        marginBottom: 20,
-        alignItems: "center",
+    inputView1: {
+        backgroundColor: 'white',
+        color: '#3A59FF',
+        width: "60%",
+        borderRadius: 25,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginLeft: '19%',
+        padding: "2%",
+        fontSize: 27,
+        marginTop: '10%'
+    },
+    inputView2: {
+        backgroundColor: 'white',
+        color: '#3A59FF',
+        width: "60%",
+        borderRadius: 25,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginLeft: '19%',
+        padding: "2%",
+        fontSize: 27,
+        marginTop: '5%'
     },
     TextInput: {
         height: 50,
@@ -64,12 +101,24 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginTop: 40,
+        marginLeft: '9%',
         backgroundColor: "#FF1493",
     },
     bigBlue: {
-        color: 'blue',
+        backgroundColor: 'white',
+        color: '#3A59FF',
+        width: "75%",
+        borderRadius: 25,
+        textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 30,
-        padding: 50
+        marginLeft: '11%',
+        padding: "2%",
+        fontSize: 27,
+        marginTop: '50%'
     }
 })
+
+
+
+
+
