@@ -1,6 +1,7 @@
 import { Text, View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react"
+import { getAuth, } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from 'react';
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -22,37 +23,44 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <>
-            <Text style={styles.bigBlue}>Login Here</Text>
-            <View style={styles.inputView1}>
-                <TextInput
-                    placeholder='Email'
-                    placeholderTextColor="#003f5c"
-                    onChangeText={(email) => setEmail(email)}
-                />
+            <View style={styles.container}>
+                <Text style={styles.bigBlue}>Login Here</Text>
+                <View style={styles.inputView1}>
+                    <TextInput
+                        placeholder='Email'
+                        placeholderTextColor="#003f5c"
+                        onChangeText={(email) => setEmail(email)}
+                    />
+                </View>
+                <View style={styles.inputView2}>
+                    <TextInput
+                        placeholder='Password'
+                        secureTextEntry={true}
+                        placeholderTextColor="#003f5c"
+                        onChangeText={(password) => setPassword(password)}
+                    />
+                </View>
+                <TouchableOpacity style={styles.loginBtn} onPress={() => {
+                    handleSubmit();
+                }}>
+                    <Text style={styles.loginText}>LOGIN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.redirectBtn} onPress={() => {
+                    navigation.navigate("Signup")
+                }}>
+                    <Text>Sign up </Text>
+                </TouchableOpacity>
             </View>
-            <View style={styles.inputView2}>
-                <TextInput
-                    placeholder='Password'
-                    secureTextEntry={true}
-                    placeholderTextColor="#003f5c"
-                    onChangeText={(password) => setPassword(password)}
-                />
-            </View>
-            <TouchableOpacity style={styles.loginBtn} onPress={() => {
-                handleSubmit();
-            }}>
-                <Text style={styles.loginText}>LOGIN</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.redirectBtn} onPress={() => {
-                navigation.navigate("Signup")
-            }}>
-                <Text>Don't have an account? Sign up here</Text>
-            </TouchableOpacity>
 
         </>
     )
 }
 const styles = StyleSheet.create({
+
+    container: {
+        backgroundColor: 'yellow',
+
+    },
     redirectBtn: {
         width: "80%",
         borderRadius: 25,
