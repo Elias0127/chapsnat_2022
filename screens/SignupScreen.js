@@ -2,6 +2,8 @@ import { Text, View, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react"
 import { YellowBox } from 'react-native-web';
+import { doc, setDoc } from "firebase/firestore";
+import db from "../firebase";
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState();
@@ -10,18 +12,19 @@ export default function LoginScreen({ navigation }) {
     const auth = getAuth();
 
     async function handleSubmit() {
-        console.log("handle submit envoked!!")
-
-        await createUserWithEmailAndPassword(auth, email, password)
+        createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 auth.currentUser = user;
+                console.log("making a new user on firestroe");
+                setDoc(doc(db, "users", user.uid), {
+                    // make sure to change these to match the fields on your firestore!
+                    username: user.email,
+                    bio: "",
+                });
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode, "<---- error code");
-                console.log(errorMessage, "<--- error message")
+                console.log("Error when signing up new user:".error);
             });
     }
 
